@@ -1,0 +1,31 @@
+<div class="flex flex-col items-center p-8">
+  <form class="w-full max-w-md flex" [formGroup]="formGroup">
+    <!-- class="flex-1 h-8 border border-solid border-zinc-400 border-r-0 pl-3 rounded-l text-black" -->
+    <div class="join flex-1">
+      <input
+        class="join-item flex-1 input input-bordered"
+        formControlName="url"
+        type="text"
+        placeholder="Youtube URL or video ID"
+      />
+      <button
+        class="join-item btn btn-neutral"
+        type="button"
+        (click)="onClickPaste()"
+      >
+        <ng-icon size="22" name="featherClipboard"></ng-icon>
+      </button>
+    </div>
+  </form>
+  <ng-container *ngIf="thumbsEvent$ | async as thumbEvent">
+    <div *ngIf="thumbEvent.type === 'loading'" class="mt-14 loading loading-spinner"></div>
+    <mr-error *ngIf="thumbEvent.type === 'error'" class="mt-14" [message]="thumbEvent.errorMessage || ''"  />
+
+    <ul class="mt-6 w-full flex flex-col gap-4" *ngIf="thumbEvent.type === 'result'">
+      <li class="grid grid-cols-[75px_1fr] gap-6" *ngFor="let thumbnail of thumbEvent.thumbnails">
+        <div class="badge badge-neutral justify-self-end self-start">{{ thumbnail.resolution }}</div>
+        <img class="justify-self-start max-w-full" [ngSrc]="thumbnail.url" [alt]="thumbnail.name" [width]="thumbnail.width" [height]="thumbnail.height" />
+      </li>
+    </ul>
+  </ng-container>
+</div>
